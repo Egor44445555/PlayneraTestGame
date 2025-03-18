@@ -25,6 +25,7 @@ public class CameraTouchMove : MonoBehaviour
 
     void Start()
     {
+        // Setting camera bounds
         minBounds.x = topLeftPoint.transform.position.x;
         maxBounds.x = bottomRightPoint.transform.position.x;
         minBounds.y = bottomRightPoint.transform.position.y;        
@@ -41,11 +42,13 @@ public class CameraTouchMove : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
+                // First point of finger contact
                 touchStartPos = touch.position;
                 cameraStartPos = Camera.main.transform.position;
             }
-            else if (touch.phase == TouchPhase.Moved && !touchZoom)
+            else if (touch.phase == TouchPhase.Moved)
             {
+                // Finger movement on the screen
                 Vector2 touchDelta = touch.position - touchStartPos;
                 Vector3 newPos = cameraStartPos - new Vector3(touchDelta.x * moveSpeed, touchDelta.y * moveSpeed, 0);
 
@@ -60,16 +63,12 @@ public class CameraTouchMove : MonoBehaviour
             }
         }
 
-        if (Input.touchCount == 0)
-        {
-            touchZoom = false;
-        }
-
         LimitCameraPosition();
     }
 
     void LimitCameraPosition()
     {
+        // Camera boundary checking
         Vector3 pos = cam.transform.position;
 
         pos.x = Mathf.Clamp(pos.x, minBounds.x + GetHorizontalLimit(), maxBounds.x - GetHorizontalLimit());
